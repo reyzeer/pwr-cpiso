@@ -97,7 +97,7 @@ for o in np.unique(rlabels):
 	left_center_of_mass = ndi.measurements.center_of_mass(left, labels = left_area)
 	right_center_of_mass = ndi.measurements.center_of_mass(right, labels = right_area)
 	xe = abs(left_center_of_mass[0] - right_center_of_mass[0])
-	ye = abs(right_center_of_mass[1] - right_center_of_mass[1])
+	ye = abs(left_center_of_mass[1] - right_center_of_mass[1])
 
 	distance = sqrt(xe*xe + ye*ye)
 
