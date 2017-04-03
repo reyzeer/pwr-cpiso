@@ -4,6 +4,7 @@ import numpy as np
 from skimage import data, io, morphology, filters, color
 from scipy import ndimage as ndi
 import matplotlib.pyplot as plt
+from math import sqrt
 
 cleft = io.imread('left.jpg')
 cright = io.imread('right.jpg')
@@ -55,15 +56,15 @@ for cluster in listOfLabelForTheLeftImageWhichILove:
 		llabels[mask] = 0
 
 for cluster in listOfLabelForTheRightImageWhichILove:
-        mask = rlabels == cluster
-        elements = np.sum(mask)
-        ##print('Current cluster is %i [%i elements]' %
-        #(  
-        #       cluster,
-        #       elements
-        #)) 
-        if elements < 1000:
-                rlabels[mask] = 0
+		mask = rlabels == cluster
+		elements = np.sum(mask)
+		##print('Current cluster is %i [%i elements]' %
+		#(
+		#       cluster,
+		#       elements
+		#))
+		if elements < 1000:
+				rlabels[mask] = 0
 
 #print(np.unique(llabels))
 #print(np.unique(rlabels))
@@ -78,13 +79,13 @@ for o in np.unique(llabels):
 	llabels[mask] = o2
 
 for o in np.unique(rlabels):
-        mask = rlabels == o
-        source = llabels[mask]
-        counts = np.bincount(source)
-        #print(counts)
-        o2 = np.argmax(counts)
-        # print('cluster %i gives %i' %(o, o2))
-        rlabels[mask] = o2
+		mask = rlabels == o
+		source = llabels[mask]
+		counts = np.bincount(source)
+		#print(counts)
+		o2 = np.argmax(counts)
+		# print('cluster %i gives %i' %(o, o2))
+		rlabels[mask] = o2
 
 print(np.unique(llabels))
 print(np.unique(rlabels))
@@ -95,8 +96,10 @@ for o in np.unique(rlabels):
 	
 	left_center_of_mass = ndi.measurements.center_of_mass(left, labels = left_area)
 	right_center_of_mass = ndi.measurements.center_of_mass(right, labels = right_area)
+	xe = abs(left_center_of_mass[0] - right_center_of_mass[0])
+	ye = abs(right_center_of_mass[1] - right_center_of_mass[1])
 
-	distance = abs(left_center_of_mass[0] - right_center_of_mass[0])
+	distance = sqrt(xe*xe + ye*ye)
 
 	print('Object %i\n\t%s\n\t%s\n\t%i' % (o, left_center_of_mass, right_center_of_mass, distance))
 
