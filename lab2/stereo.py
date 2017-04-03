@@ -5,8 +5,6 @@ from skimage import data, io, morphology, filters, color
 from scipy import ndimage as ndi
 import matplotlib.pyplot as plt
 
-print('Hello');
-
 cleft = io.imread('left.jpg')
 cright = io.imread('right.jpg')
 
@@ -15,9 +13,19 @@ oleft = cleft[:,:,1]
 oright = cright[:,:,1]
 
 #
-selem = morphology.disk(20)
+#selem = morphology.disk(40)
+#selem = morphology.octagon(30, 36)
+#selem = morphology.diamond(20)
+
+# przeksztalcenie morfologiczne na podstawie okna prostokatnego (w stosunku do rozdzielczosci obrazu)
+selem = morphology.rectangle(7*8, 7*6)
 left = filters.median(oleft, selem)
 right = filters.median(oright, selem)
+
+# przeksztalcenie morfoligczne z oknem "okraglym"
+selem = morphology.disk(30)
+left = filters.median(left, selem)
+right = filters.median(right, selem)
 
 lmarkers = filters.rank.gradient(left, morphology.disk(5)) < 10
 lmarkers = ndi.label(lmarkers)[0]
@@ -66,7 +74,7 @@ for o in np.unique(llabels):
 	counts = np.bincount(source)
 	#print(counts)
 	o2 = np.argmax(counts)
-	print('cluster %i gives %i' %(o, o2))
+	# print('cluster %i gives %i' %(o, o2))
 	llabels[mask] = o2
 
 for o in np.unique(rlabels):
@@ -75,7 +83,7 @@ for o in np.unique(rlabels):
         counts = np.bincount(source)
         #print(counts)
         o2 = np.argmax(counts)
-        print('cluster %i gives %i' %(o, o2))
+        # print('cluster %i gives %i' %(o, o2))
         rlabels[mask] = o2
 
 print(np.unique(llabels))
