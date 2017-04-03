@@ -18,23 +18,23 @@ oright = cright[:,:,1]
 #selem = morphology.diamond(20)
 
 # przeksztalcenie morfologiczne na podstawie okna prostokatnego (w stosunku do rozdzielczosci obrazu)
-selem = morphology.rectangle(7*8, 7*6)
+#selem = morphology.rectangle(7*8, 7*6)
+#left = filters.median(oleft, selem)
+#right = filters.median(oright, selem)
+
+# przeksztalcenie morfoligczne z oknem "okraglym"
+selem = morphology.disk(20)
 left = filters.median(oleft, selem)
 right = filters.median(oright, selem)
 
-# przeksztalcenie morfoligczne z oknem "okraglym"
-selem = morphology.disk(30)
-left = filters.median(left, selem)
-right = filters.median(right, selem)
-
-lmarkers = filters.rank.gradient(left, morphology.disk(5)) < 10
+lmarkers = filters.rank.gradient(left, morphology.rectangle(8, 6)) < 10
 lmarkers = ndi.label(lmarkers)[0]
-lgradient = filters.rank.gradient(left, morphology.disk(2))
+lgradient = filters.rank.gradient(left, morphology.rectangle(4, 3))
 llabels = morphology.watershed(lgradient, lmarkers)
 
-rmarkers = filters.rank.gradient(right, morphology.disk(5)) < 10
+rmarkers = filters.rank.gradient(right, morphology.rectangle(8, 6)) < 10
 rmarkers = ndi.label(rmarkers)[0]
-rgradient = filters.rank.gradient(right, morphology.disk(2))
+rgradient = filters.rank.gradient(right, morphology.rectangle(4, 3))
 rlabels = morphology.watershed(rgradient, rmarkers)
 
 listOfLabelForTheLeftImageWhichILove = np.unique(llabels)
